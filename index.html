@@ -317,7 +317,7 @@
 
 <header>
   <h1>מכירת תכולה</h1>
-  <p class="subtitle">פריטים איכותיים במחירים משתלמים — איסוף עצמי</p>
+  <p class="subtitle">בעקבות מעבר אנחנו מוכרים את הריהוט ומוצרי החשמל שלנו ואתם מרוויחים. פריטים איכותיים במחירים משתלמים — איסוף עצמי</p>
 </header>
 
 <nav class="filters" id="filters"></nav>
@@ -496,7 +496,7 @@
       warranty: 'אין',
       description: 'ספה מעוצבת של Arik Design רוחב 3.2 מטר עם שזלונג 1.6 מטר. בד רחיץ דוחה כתמים. כולל כריות.',
       originalLink: 'https://arikdesign.co.il/product/%d7%a1%d7%a4%d7%94-%d7%93%d7%92%d7%9d-%d7%a4%d7%a0%d7%9c%d7%95%d7%a4%d7%94/',
-      images: [],
+      images: [images/sofa.png],
     },
     {
       name: 'שולחן סלון',
@@ -535,7 +535,7 @@
       warranty: 'אין',
       description: 'מזנון שחור מעוצב עם שתי מגירות וקלפה באמצע. נפתח בלחיצה.',
       originalLink: null,
-      images: [],
+      images: [images/tv-console.jpg],
     },
     {
       name: '2 כוורות מעוצבות',
@@ -613,7 +613,7 @@
       warranty: 'אין',
       description: 'כסא ברכיים יציבון ארגונומי לחיזוק הגב. מעולה לאנשים שיושבים הרבה מול מחשב.',
       originalLink: 'https://doobal.com/%D7%9E%D7%95%D7%A6%D7%A8/%D7%99%D7%A6%D7%99%D7%91%D7%95%D7%9F-%D7%A4%D7%A0%D7%99%D7%90%D7%95%D7%9E%D7%98%D7%99/',
-      images: [],
+      images: [images/knee-chair.png],
     },
     {
       name: 'מיקסר מקצועי Ankarsrum',
@@ -652,7 +652,7 @@
       warranty: 'אין',
       description: 'תמי 4 Edge שחור במצב מצויין.',
       originalLink: null,
-      images: [],
+      images: [images/tami4.png],
     },
     {
       name: 'מעמד 5 מגירות לירקות',
@@ -691,7 +691,7 @@
       warranty: 'אין',
       description: 'סולם פעילויות חזק ובטיחותי, כולל חבלת סולם וטבעות. כמו חדש.',
       originalLink: 'https://www.funphix.com/shop/funphix-gym-playsets/funphix-5-in-1-swedish-ladder-wall-gym-set/',
-      images: [],
+      images: [images/excercise-ladder.png],
     },
     {
       name: 'ארגז חול',
@@ -704,7 +704,7 @@
       warranty: 'אין',
       description: 'ארגז חול עם מכסה. הילדים מתים על זה ולכם יש זמן לשתות קפה ☕',
       originalLink: 'https://www.toyland.co.il/items/3757312',
-      images: [],
+      images: [images/sandbox.png],
     },
     {
       name: 'פוף ישיבה',
@@ -846,7 +846,7 @@
       : placeholderSVG();
 
     const metaParts = [];
-    if (item.age) metaParts.push(`ותק: ${item.age}`);
+    if (item.age) metaParts.push(`נרכש לפני: ${item.age}`);
     if (item.currentPrice) metaParts.push(`מחיר נוכחי בחנות: ₪${item.currentPrice.toLocaleString('he-IL')}`);
 
     const originalBtn = item.originalLink
