@@ -95,7 +95,64 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      flex-shrink: 0;
     }
+
+    /* Carousel */
+    .carousel {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .carousel-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.3s ease;
+      will-change: transform;
+    }
+    .carousel-track img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      transition: background 0.15s;
+    }
+    .carousel-btn:hover { background: #fff; }
+    .carousel-btn.prev { right: 10px; }
+    .carousel-btn.next { left: 10px; }
+    .carousel-dots {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+      z-index: 2;
+    }
+    .carousel-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      transition: background 0.15s;
+    }
+    .carousel-dot.active { background: #fff; }
     .img-placeholder {
       width: 100%;
       height: 100%;
@@ -317,7 +374,7 @@
 
 <header>
   <h1>מכירת תכולה</h1>
-  <p class="subtitle">בעקבות מעבר אנחנו מוכרים את הריהוט ומוצרי החשמל שלנו ואתם מרוויחים. פריטים איכותיים במחירים משתלמים — איסוף עצמי</p>
+  <p class="subtitle">בעקבות מעבר אנחנו מוכרים את הריהוט ומוצרי החשמל שלנו ואתם מרוויחים. פריטים איכותיים במחירים משתלמים — איסוף עצמי מראשון לציון</p>
 </header>
 
 <nav class="filters" id="filters"></nav>
@@ -483,7 +540,7 @@
       warranty: 'אין',
       description: 'מראת גוף אובלית 165×60 ס״מ מסגרת שחורה.',
       originalLink: null,
-      images: [],
+      images: ['images/full-mirror.jpg'],
     },
     {
       name: 'ספה',
@@ -548,7 +605,7 @@
       warranty: 'אין',
       description: 'זוג כוורות מפירזול שחור עם מסגרות עץ. מעולה ליצירת חללים ועיצוב הבית.',
       originalLink: null,
-      images: [],
+      images: ['images/bookself.jpg', 'images/bookself2.jpg'],
     },
     {
       name: 'ספת איקאה במרפסת',
@@ -842,11 +899,22 @@
     const soldOverlay = isSold ? '<div class="badge-sold">נמכר</div>' : '';
 
     const imageHTML = hasImage
-      ? `<img src="${item.images[0]}" alt="${item.name}" loading="lazy" />`
+      ? (item.images.length > 1
+          ? `<div class="carousel" id="carousel-${idx}">
+               <div class="carousel-track" id="track-${idx}">
+                 ${item.images.map(src => `<img src="${src}" alt="${item.name}" loading="lazy" />`).join('')}
+               </div>
+               <button class="carousel-btn prev" onclick="slide(event,${idx},-1)">‹</button>
+               <button class="carousel-btn next" onclick="slide(event,${idx},1)">›</button>
+               <div class="carousel-dots" id="dots-${idx}">
+                 ${item.images.map((_,i) => `<div class="carousel-dot${i===0?' active':''}" id="dot-${idx}-${i}"></div>`).join('')}
+               </div>
+             </div>`
+          : `<img src="${item.images[0]}" alt="${item.name}" loading="lazy" />`)
       : placeholderSVG();
 
     const metaParts = [];
-    if (item.age) metaParts.push(`נרכש לפני: ${item.age}`);
+    if (item.age) metaParts.push(`ותק: ${item.age}`);
     if (item.currentPrice) metaParts.push(`מחיר נוכחי בחנות: ₪${item.currentPrice.toLocaleString('he-IL')}`);
 
     const originalBtn = item.originalLink
@@ -928,6 +996,20 @@
 
   renderFilters();
   renderGrid();
+
+  const carouselState = {};
+
+  function slide(e, idx, dir) {
+    e.stopPropagation();
+    const images = items[idx].images;
+    if (!carouselState[idx]) carouselState[idx] = 0;
+    const next = (carouselState[idx] + dir + images.length) % images.length;
+    carouselState[idx] = next;
+    document.getElementById('track-' + idx).style.transform = `translateX(${next * 100}%)`;
+    document.querySelectorAll(`#dots-${idx} .carousel-dot`).forEach((d, i) => {
+      d.classList.toggle('active', i === next);
+    });
+  }
 </script>
 </body>
 </html>
