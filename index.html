@@ -93,9 +93,10 @@
     .card-image img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
       flex-shrink: 0;
+      cursor: zoom-in;
     }
 
     /* Carousel */
@@ -115,8 +116,9 @@
     .carousel-track img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       flex-shrink: 0;
+      cursor: zoom-in;
     }
     .carousel-btn {
       position: absolute;
@@ -364,6 +366,40 @@
     .modal-wa-icon { width: 22px; height: 22px; fill: #fff; }
     .modal-note { margin-top: 12px; font-size: 0.8rem; color: #aaa; text-align: center; }
 
+    /* Lightbox */
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-overlay img {
+      max-width: 92vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.6);
+      cursor: default;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+
     @media (max-width: 600px) {
       header h1 { font-size: 2rem; }
       .grid { grid-template-columns: 1fr; padding: 0 16px 48px; }
@@ -374,7 +410,7 @@
 
 <header>
   <h1>מכירת תכולה</h1>
-  <p class="subtitle">בעקבות מעבר אנחנו מוכרים את הריהוט ומוצרי החשמל שלנו ואתם מרוויחים. פריטים איכותיים במחירים משתלמים — איסוף עצמי מראשון לציון</p>
+  <p class="subtitle">בעקבות מעבר אנחנו מוכרים את הריהוט ומוצרי החשמל שלנו ואתם מרוויחים. פריטים איכותיים במחירים משתלמים — איסוף עצמי מראשון לציון וזמין עד סוף החודש</p>
 </header>
 
 <nav class="filters" id="filters"></nav>
@@ -392,6 +428,11 @@
     </a>
     <p class="modal-note">תגיע/י ישירות לצ׳אט — ללא טפסים 😊</p>
   </div>
+</div>
+
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightbox-img" src="" alt="" />
 </div>
 
 <script>
@@ -902,7 +943,7 @@
       ? (item.images.length > 1
           ? `<div class="carousel" id="carousel-${idx}">
                <div class="carousel-track" id="track-${idx}">
-                 ${item.images.map(src => `<img src="${src}" alt="${item.name}" loading="lazy" />`).join('')}
+                 ${item.images.map(src => `<img src="${src}" alt="${item.name}" loading="lazy" onclick="openLightbox(this.src)" />`).join('')}
                </div>
                <button class="carousel-btn prev" onclick="slide(event,${idx},-1)">‹</button>
                <button class="carousel-btn next" onclick="slide(event,${idx},1)">›</button>
@@ -910,7 +951,7 @@
                  ${item.images.map((_,i) => `<div class="carousel-dot${i===0?' active':''}" id="dot-${idx}-${i}"></div>`).join('')}
                </div>
              </div>`
-          : `<img src="${item.images[0]}" alt="${item.name}" loading="lazy" />`)
+          : `<img src="${item.images[0]}" alt="${item.name}" loading="lazy" onclick="openLightbox(this.src)" />`)
       : placeholderSVG();
 
     const metaParts = [];
@@ -992,7 +1033,17 @@
       document.getElementById('modal').classList.remove('open');
   }
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  function closeLightbox(e) {
+    if (!e || e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close'))
+      document.getElementById('lightbox').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeLightbox(); } });
 
   renderFilters();
   renderGrid();
